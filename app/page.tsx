@@ -1,219 +1,201 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import {
-  Building2, Clock, Send, CheckCircle2, XCircle, AlertTriangle,
-  Eye, BanknoteIcon, Phone, MapPin, ArrowRight, ShieldCheck, User, Home,
+import { useState } from "react";
+import { 
+  Search, Flame, Hotel, Tent, Umbrella, Bed, 
+  Heart, MapPin, Star, ArrowDown, User, MessageCircle, Home
 } from "lucide-react";
 
-/* ─────────────────────────────────────────────
-   Constants & Types
-   ───────────────────────────────────────────── */
-const PRIMARY_COLOR = "#FF4500";
-type RoomStatusType = "available" | "pending" | "sold_out";
-type TabType = "guest" | "host";
+const PRIMARY_COLOR = "#FF5E00";
 
-interface RoomDTO {
-  id: string;
-  motelName: string;
-  roomType: string;
-  location: string;
-  originalPrice: number;
-  dealPrice: number;
-  hostName: string;
-  hostPhone: string;
-  tossLink: string;
-  checkIn: string;
-  checkOut: string;
-  deadlineHour: number;
-  guestName: string;
-  status: RoomStatusType;
-  hasSentNotification: boolean;
-}
+export default function ZoopPage() {
+  const [activeTab, setActiveTab] = useState("줍기");
+  const [isTossClicked, setIsTossClicked] = useState<{ [key: string]: boolean }>({});
+  const [roomStatus, setRoomStatus] = useState<{ [key: string]: string }>({});
 
-const INITIAL_ROOMS: RoomDTO[] = [
-  {
-    id: "room_1",
-    motelName: "역삼 블루힐 모텔",
-    roomType: "디럭스 더블",
-    location: "서울 강남구 역삼동",
-    originalPrice: 120000,
-    dealPrice: 39000,
-    hostName: "김사장",
-    hostPhone: "010-1234-5678",
-    tossLink: "https://toss.me/bluehill39",
-    checkIn: "오늘 22:00",
-    checkOut: "내일 12:00",
-    deadlineHour: 3,
-    guestName: "임윤지",
-    status: "available",
-    hasSentNotification: false,
-  },
-  {
-    id: "room_2",
-    motelName: "신림 골든파크",
-    roomType: "스탠다드 트윈",
-    location: "서울 관악구 신림동",
-    originalPrice: 90000,
-    dealPrice: 29000,
-    hostName: "박사장",
-    hostPhone: "010-9876-5432",
-    tossLink: "https://toss.me/goldenpark29",
-    checkIn: "오늘 21:00",
-    checkOut: "내일 11:00",
-    deadlineHour: 2,
-    guestName: "임윤지",
-    status: "available",
-    hasSentNotification: false,
-  },
-];
-
-const formatPrice = (price: number) => price.toLocaleString("ko-KR");
-const getDiscountRate = (original: number, deal: number) =>
-  Math.round(((original - deal) / original) * 100);
-
-/* ─────────────────────────────────────────────
-   Main Page Component
-   ───────────────────────────────────────────── */
-export default function BangGeumPage() {
-  const [activeTab, setActiveTab] = useState<TabType>("guest");
-  const [rooms, setRooms] = useState<RoomDTO[]>(INITIAL_ROOMS);
-  const [openedTossRoomId, setOpenedTossRoomId] = useState<string | null>(null);
-
-  const pendingRooms = useMemo(
-    () => rooms.filter(room => room.status === "pending" && room.hasSentNotification),
-    [rooms]
-  );
-
-  const handleClickToss = (roomId: string) => setOpenedTossRoomId(roomId);
-
-  const handleClickSendNotification = (roomId: string) => {
-    setRooms(prev =>
-      prev.map(room =>
-        room.id === roomId
-          ? { ...room, status: "pending" as RoomStatusType, hasSentNotification: true }
-          : room
-      )
-    );
-    setOpenedTossRoomId(null);
-  };
-
-  const handleClickConfirmPayment = (roomId: string) => {
-    setRooms(prev =>
-      prev.map(room =>
-        room.id === roomId ? { ...room, status: "sold_out" as RoomStatusType } : room
-      )
-    );
-  };
+  const rooms = [
+    {
+      id: "1",
+      name: "을지로 디자인 호텔",
+      type: "스탠다드 더블",
+      location: "서울 중구",
+      originalPrice: 180000,
+      price: 59000,
+      discount: "67%",
+      rating: 4.3,
+      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=400",
+      tossLink: "https://toss.me/zoop59",
+      updatedAt: "1분 전 업로드"
+    },
+    {
+      id: "2",
+      name: "부산 해운대 파라다이스",
+      type: "프리미엄 오션뷰",
+      location: "부산 해운대구",
+      originalPrice: 450000,
+      price: 179000,
+      discount: "60%",
+      rating: 4.9,
+      image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=400",
+      tossLink: "https://toss.me/zoop179",
+      updatedAt: "8분 전 업로드",
+      urgent: "마감임박",
+      viewers: "지금 14명이 보고 있어요"
+    }
+  ];
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-[#F8F9FA]">
+    <div className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-white font-sans">
       {/* Header */}
-      <header className="border-b border-gray-200 bg-white px-5 pt-5 pb-0">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h1 className="m-0 text-2xl font-black tracking-tight" style={{ color: PRIMARY_COLOR }}>방금</h1>
-            <p className="m-0 mt-0.5 text-xs text-gray-400">수수료 0원 · 사장님 직거래 · 지금 바로</p>
+      <header className="px-5 pt-6 pb-2">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1">
+            <span className="text-2xl font-black italic tracking-tighter" style={{ color: PRIMARY_COLOR }}>ZOOP</span>
+            <span className="text-xs text-gray-400 font-bold mt-1">숙소를 줍다</span>
           </div>
-          <div className="rounded-lg px-2.5 py-1 text-[11px] font-bold text-white" style={{ background: PRIMARY_COLOR }}>MVP 테스트</div>
+          <div className="flex items-center gap-1.5 bg-orange-50 px-3 py-1.5 rounded-full">
+            <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+            <span className="text-[11px] font-bold text-orange-600">실시간 업데이트 중</span>
+          </div>
         </div>
-        <div className="flex">
-          <button onClick={() => setActiveTab("guest")} className={`flex flex-1 items-center justify-center gap-1.5 border-b-2 py-3 text-sm font-bold transition-all ${activeTab === "guest" ? "text-gray-900" : "border-transparent text-gray-400"}`} style={{ borderColor: activeTab === "guest" ? PRIMARY_COLOR : "transparent" }}><User size={16} />게스트 화면</button>
-          <button onClick={() => setActiveTab("host")} className={`relative flex flex-1 items-center justify-center gap-1.5 border-b-2 py-3 text-sm font-bold transition-all ${activeTab === "host" ? "text-gray-900" : "border-transparent text-gray-400"}`} style={{ borderColor: activeTab === "host" ? PRIMARY_COLOR : "transparent" }}><Home size={16} />사장님 화면{pendingRooms.length > 0 && (<span className="absolute -top-0.5 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white" style={{ background: PRIMARY_COLOR }}>{pendingRooms.length}</span>)}</button>
+
+        {/* Search Bar */}
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <input 
+            type="text" 
+            placeholder="지역, 숙소명으로 검색" 
+            className="w-full bg-gray-50 border-none rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-orange-100"
+          />
+          <button className="absolute right-4 top-1/2 -translate-y-1/2">
+            <div className="p-1 border border-gray-200 rounded-md"><ArrowDown size={14} className="text-gray-400 rotate-90" /></div>
+          </button>
+        </div>
+
+        {/* Category Icons */}
+        <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+          {[
+            { icon: <Flame size={16} />, label: "전체", active: true },
+            { icon: <Hotel size={16} />, label: "호텔" },
+            { icon: <Tent size={16} />, label: "펜션" },
+            { icon: <Umbrella size={16} />, label: "리조트" },
+            { icon: <Bed size={16} />, label: "모텔" }
+          ].map((item, idx) => (
+            <button key={idx} className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full whitespace-nowrap text-sm font-bold border transition-all ${item.active ? 'bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-100' : 'bg-white border-gray-100 text-gray-500'}`}>
+              {item.icon} {item.label}
+            </button>
+          ))}
         </div>
       </header>
 
-      <main className="flex flex-1 flex-col gap-3 px-4 pt-4 pb-8">
-        {activeTab === "guest" && (
-          <>
-            {/* How it works */}
-            <div className="rounded-xl border border-dashed border-gray-300 bg-white p-4">
-              <p className="m-0 mb-2 text-xs font-bold text-gray-500">📌 방금 이용법 (3단계)</p>
-              <div className="flex items-center gap-0 text-[11px] text-gray-500">
-                <span className="rounded-md bg-blue-50 px-2 py-1 font-bold text-blue-600">① 토스 송금</span>
-                <ArrowRight size={12} className="mx-1 text-gray-300" />
-                <span className="rounded-md bg-amber-50 px-2 py-1 font-bold text-amber-600">② 송금 알림</span>
-                <ArrowRight size={12} className="mx-1 text-gray-300" />
-                <span className="rounded-md bg-green-50 px-2 py-1 font-bold text-green-600">③ 사장님 확인</span>
+      {/* Feed Area */}
+      <main className="flex-1 bg-gray-50/50 px-5 pt-4 space-y-6 pb-24">
+        {rooms.map((room) => (
+          <div key={room.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm border border-gray-100 relative">
+            {/* Image Section */}
+            <div className="relative h-56">
+              <img src={room.image} className="w-full h-full object-cover" alt={room.name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              
+              {room.urgent && (
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1">
+                  <Flame size={12} className="text-orange-600" />
+                  <span className="text-[10px] font-black text-orange-600">{room.urgent}</span>
+                </div>
+              )}
+              
+              <button className="absolute top-4 right-4 text-white"><Heart size={24} /></button>
+              
+              <div className="absolute bottom-4 left-4 flex items-center gap-1.5 text-white/90 text-xs font-medium">
+                <Clock size={12} /> {room.updatedAt}
+              </div>
+              
+              <div className="absolute bottom-4 right-4 bg-orange-600 text-white font-black text-lg px-3 py-1 rounded-2xl">
+                {room.discount}
               </div>
             </div>
 
-            {/* Room List */}
-            {rooms.map(room => {
-              const isSoldOut = room.status === "sold_out";
-              const isPending = room.status === "pending";
-              const isThisRoomTossOpened = openedTossRoomId === room.id;
-              const discountRate = getDiscountRate(room.originalPrice, room.dealPrice);
-
-              return (
-                <div key={room.id} className={`relative overflow-hidden rounded-2xl border bg-white transition-all ${isSoldOut ? "border-gray-200 opacity-60" : isPending ? "border-amber-300" : "border-gray-200"}`}>
-                  {isSoldOut && (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/80">
-                      <XCircle size={40} className="mb-2 text-gray-400" />
-                      <p className="m-0 text-lg font-black text-gray-500">거래 완료</p>
-                    </div>
-                  )}
-
-                  <div className="p-4">
-                    <div className="mb-3 flex items-start justify-between">
-                      <div>
-                        <div className="flex items-center gap-1.5"><Building2 size={16} className="text-gray-600" /><h3 className="m-0 text-base font-extrabold text-gray-900">{room.motelName}</h3></div>
-                        <div className="mt-1 flex items-center gap-1 text-xs text-gray-400"><MapPin size={11} />{room.location}</div>
-                      </div>
-                      {isPending ? <span className="shrink-0 rounded-lg bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-600">⏳ 입금확인 중</span> : !isSoldOut && <span className="shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold text-white" style={{ background: PRIMARY_COLOR }}>🔥 땡처리</span>}
-                    </div>
-
-                    <div className="mb-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-3">
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <p className="m-0 text-xs text-gray-400 line-through">정가 {formatPrice(room.originalPrice)}원</p>
-                          <div className="mt-1 flex items-baseline gap-1.5"><span className="text-3xl font-black leading-none tracking-tighter" style={{ color: PRIMARY_COLOR }}>{formatPrice(room.dealPrice)}</span><span className="text-sm font-bold" style={{ color: PRIMARY_COLOR }}>원</span></div>
-                        </div>
-                        <div className="rounded-xl px-3 py-1.5 text-lg font-black text-white" style={{ background: PRIMARY_COLOR }}>{discountRate}%↓</div>
-                      </div>
-                    </div>
-
-                    <div className="mb-4 flex items-center gap-1.5 text-xs text-red-500 font-bold"><Clock size={13} />마감까지 {room.deadlineHour}시간 남음</div>
-
-                    {/* ── 토스 송금 플로우 버튼 ── */}
-                    {!isSoldOut && !isPending && (
-                      <div className="flex flex-col gap-2">
-                        <a href={room.tossLink} target="_blank" rel="noopener noreferrer" onClick={() => handleClickToss(room.id)} className="flex items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3.5 text-sm font-extrabold text-white transition-all hover:bg-blue-600 active:scale-[0.98]"><BanknoteIcon size={18} />토스로 {formatPrice(room.dealPrice)}원 송금하기</a>
-                        {isThisRoomTossOpened && (
-                          <button onClick={() => handleClickSendNotification(room.id)} className="flex items-center justify-center gap-2 rounded-xl border-2 border-amber-400 bg-amber-50 px-4 py-3.5 text-sm font-extrabold text-amber-700 transition-all hover:bg-amber-100 active:scale-[0.98]"><Send size={16} />송금 완료했어요 (사장님께 알림)</button>
-                        )}
-                      </div>
-                    )}
-                    
-                    {isPending && (
-                      <div className="flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-700 font-semibold"><AlertTriangle size={16} className="shrink-0 text-amber-500" />사장님이 입금을 확인하고 있어요.</div>
-                    )}
-
-                    <div className="mt-3 flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-400">
-                      <div className="flex items-center gap-1"><ShieldCheck size={12} /><span>사장님 직거래</span> <span className="font-semibold text-gray-600">{room.hostName}</span></div>
-                      <div className="flex items-center gap-1"><Phone size={11} /><span className="text-gray-500">{room.hostPhone}</span></div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </>
-        )}
-
-        {activeTab === "host" && (
-          <div className="space-y-3">
-            {pendingRooms.length > 0 ? pendingRooms.map(room => (
-              <div key={room.id} className="overflow-hidden rounded-2xl border-2 border-amber-400 bg-white">
-                <div className="flex items-center gap-2 px-4 py-3 text-white font-extrabold text-sm" style={{ background: PRIMARY_COLOR }}><AlertTriangle size={18} />새 입금 알림이 있습니다!</div>
-                <div className="p-4 text-center">
-                  <div className="mb-3 rounded-xl bg-amber-50 p-3 text-sm text-gray-600 font-medium"><b>{room.guestName}</b>님이 <b>{formatPrice(room.dealPrice)}원</b> 송금을 완료했다고 알렸습니다.</div>
-                  <button onClick={() => handleClickConfirmPayment(room.id)} className="flex w-full items-center justify-center gap-2 rounded-xl px-4 py-4 text-base font-extrabold text-white" style={{ background: PRIMARY_COLOR }}><CheckCircle2 size={20} />입금 확인 완료 · 방 닫기</button>
+            {/* Content Section */}
+            <div className="p-5">
+              <div className="flex justify-between items-start mb-1">
+                <h3 className="text-lg font-extrabold text-gray-900 leading-tight">{room.name}</h3>
+                <div className="flex items-center gap-1 text-orange-500">
+                  <Star size={14} fill="currentColor" />
+                  <span className="text-sm font-black italic">{room.rating}</span>
                 </div>
               </div>
-            )) : <div className="py-20 text-center text-gray-400">아직 알림이 없어요.</div>}
+              
+              <div className="flex items-center gap-2 text-xs text-gray-400 font-medium mb-4">
+                <div className="flex items-center gap-0.5"><MapPin size={12} /> {room.location}</div>
+                <div className="w-0.5 h-0.5 bg-gray-300 rounded-full" />
+                <div className="flex items-center gap-1"><Bed size={12} /> {room.type}</div>
+              </div>
+
+              <div className="flex items-end justify-between mb-5">
+                <div>
+                  <p className="text-xs text-gray-300 line-through mb-0.5">{room.originalPrice.toLocaleString()}원</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-black tracking-tighter" style={{ color: PRIMARY_COLOR }}>{room.price.toLocaleString()}</span>
+                    <span className="text-sm font-bold" style={{ color: PRIMARY_COLOR }}>원</span>
+                  </div>
+                </div>
+                
+                {/* ── 줍기 버튼 & 토스 송금 로직 합체 ── */}
+                <div className="flex flex-col gap-2 w-1/2">
+                  {!isTossClicked[room.id] ? (
+                    <a 
+                      href={room.tossLink} 
+                      target="_blank"
+                      onClick={() => setIsTossClicked(prev => ({...prev, [room.id]: true}))}
+                      className="bg-orange-600 text-white py-3.5 px-6 rounded-2xl font-black text-base flex items-center justify-center gap-1 shadow-lg shadow-orange-100 transition-transform active:scale-95"
+                    >
+                      줍기 <ArrowDown size={18} />
+                    </a>
+                  ) : (
+                    <button 
+                      onClick={() => setRoomStatus(prev => ({...prev, [room.id]: 'pending'}))}
+                      className="bg-blue-500 text-white py-3.5 px-4 rounded-2xl font-black text-[13px] flex items-center justify-center gap-1.5 shadow-lg shadow-blue-100"
+                    >
+                      송금완료 알림 <Send size={14} />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {roomStatus[room.id] === 'pending' && (
+                <div className="bg-orange-50 rounded-2xl py-3 px-4 flex items-center gap-2 mb-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-bounce" />
+                  <span className="text-[11px] font-bold text-orange-700">사장님이 입금을 확인하고 있어요!</span>
+                </div>
+              )}
+
+              {room.viewers && (
+                <div className="bg-red-50 py-2.5 px-4 rounded-xl inline-flex items-center gap-2">
+                  <div className="flex -space-x-1">
+                    {[1,2].map(i => <div key={i} className="w-4 h-4 rounded-full border border-white bg-gray-200" />)}
+                  </div>
+                  <span className="text-[10px] font-bold text-red-600 tracking-tight">{room.viewers}</span>
+                </div>
+              )}
+            </div>
           </div>
-        )}
+        ))}
       </main>
+
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 mx-auto max-w-md bg-white/90 backdrop-blur-xl border-t border-gray-100 px-6 py-3 flex justify-between items-center z-[100]">
+        {[
+          { icon: <Flame size={24} />, label: "줍기", active: true },
+          { icon: <Search size={24} />, label: "검색" },
+          { icon: <Heart size={24} />, label: "찜" },
+          { icon: <User size={24} />, label: "마이" }
+        ].map((nav, idx) => (
+          <button key={idx} className={`flex flex-col items-center gap-1 ${nav.active ? 'text-orange-600' : 'text-gray-300'}`}>
+            {nav.icon}
+            <span className="text-[10px] font-bold">{nav.label}</span>
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }
