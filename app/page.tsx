@@ -463,7 +463,7 @@ const HomePage = () => {
 
       {/* ── Header ── */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, padding: "16px 20px 0", background: "#FAFAFA" }}>
-        <div style={{ display: "flex", justify-content: "space-between", alignItems: "center", marginBottom: "14px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
             <h1 style={{ margin: 0, fontSize: "28px", fontWeight: 900, letterSpacing: "-0.06em", color: BRAND_COLOR }}>ZOOP</h1>
             <span style={{ fontSize: "12px", fontWeight: 500, color: "#aaa" }}>숙소를 줍다</span>
