@@ -5,12 +5,12 @@ import type { LucideIcon } from "lucide-react";
 /* ── Category ── */
 
 export const CATEGORY_LIST: CategoryDTO[] = [
-  { id: "all", label: "전체", icon: "🔥" },
-  { id: "hotel", label: "호텔", icon: "🏨" },
-  { id: "pension", label: "펜션", icon: "🏡" },
-  { id: "resort", label: "리조트", icon: "🏖️" },
-  { id: "motel", label: "모텔", icon: "🛏️" },
-  { id: "guesthouse", label: "게하", icon: "🎒" },
+  { id: "all", label: "전체", icon: "" },
+  { id: "hotel", label: "호텔", icon: "" },
+  { id: "pension", label: "펜션", icon: "" },
+  { id: "resort", label: "리조트", icon: "" },
+  { id: "motel", label: "모텔", icon: "" },
+  { id: "guesthouse", label: "게하", icon: "" },
 ];
 
 /* ── Badge Style ── */
