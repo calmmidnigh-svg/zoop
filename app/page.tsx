@@ -504,7 +504,7 @@ const HomePage = () => {
                 cursor: "pointer", whiteSpace: "nowrap",
               }}
             >
-              <span style={{ fontSize: "16px" }}>{category.icon}</span>{category.label}
+              {category.label}
             </button>
           ))}
         </div>
