@@ -593,7 +593,7 @@ const HomePage = () => {
                       display: "flex", alignItems: "center", gap: "4px", padding: "10px 20px", borderRadius: "14px", border: "none",
                       background: isAlmostGone ? `linear-gradient(135deg, ${BRAND_COLOR}, #E54D00)` : BRAND_COLOR,
                       color: "#fff", fontSize: "15px", fontWeight: 800, cursor: "pointer",
-                      boxShadow: isAlmostGone ? "0 4px 16px rgba(255,94,0,.35)" : "none",
+                      boxShadow: "none",
                     }}
                   >
                     줍기<ArrowDown size={14} strokeWidth={3} />
