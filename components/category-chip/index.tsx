@@ -24,7 +24,6 @@ const CategoryChip = ({
           : "border border-gray-200 bg-white font-medium text-gray-500 hover:border-gray-300"
       }`}
     >
-      <span className="text-base">{category.icon}</span>
       {category.label}
     </button>
   );
